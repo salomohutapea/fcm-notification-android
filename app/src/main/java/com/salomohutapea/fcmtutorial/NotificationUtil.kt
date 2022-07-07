@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.widget.RemoteViews
@@ -59,23 +60,8 @@ object NotificationUtil {
 
         if (data.type == NotificationType.COMPLEX) {
             val layout = RemoteViews(context.packageName, R.layout.notification_one)
-            val layoutHidden = RemoteViews(context.packageName, R.layout.notification_one_hidden)
-
-            notification = NotificationCompat.Builder(context, CHANNEL_ID).apply {
-                setContentTitle(data.title)
-                setSmallIcon(R.drawable.ic_launcher_background)
-                setAutoCancel(true)
-                setStyle(NotificationCompat.DecoratedCustomViewStyle())
-                setCustomContentView(layoutHidden)
-                setCustomBigContentView(layout)
-                setContentIntent(intent)
-            }.build()
-
-            generateNotificationContent(context, notification, data, layout, layoutHidden)
-        } else if (data.type == NotificationType.MESSAGE) {
-            val layout = RemoteViews(context.packageName, R.layout.notification_one)
             val layoutHidden =
-                RemoteViews(context.packageName, R.layout.notification_message_hidden)
+                RemoteViews(context.packageName, R.layout.notification_one_hidden)
 
             notification = NotificationCompat.Builder(context, CHANNEL_ID).apply {
                 setContentTitle(data.title)
@@ -97,7 +83,7 @@ object NotificationUtil {
                 setContentIntent(intent)
             }.build()
 
-            getNotificationManager(context).notify(data.id, notification)
+            data.id?.let { getNotificationManager(context).notify(it, notification) }
         }
     }
 
@@ -113,43 +99,38 @@ object NotificationUtil {
         layout.setTextViewText(R.id.one_contenttitle, data.contentTitle)
         layout.setTextViewText(R.id.one_content, data.content)
 
+        layoutHidden.setTextViewText(
+            R.id.one_content_hidden,
+            data.subTitle
+        )
         layoutHidden.setTextViewText(R.id.one_title_hidden, data.title)
 
-        if (data.type === NotificationType.MESSAGE) {
-            layoutHidden.setTextViewText(
-                R.id.one_content_hidden,
-                data.title
-            )
-            return
-        }
-
-        if (data.type === NotificationType.COMPLEX) {
-
-            val oneImage = NotificationTarget(
+        val oneImage = data.id?.let {
+            NotificationTarget(
                 context,
                 R.id.one_img,
                 layout,
                 notification,
-                data.id
+                it
             )
-
-            Glide.with(context)
-                .asBitmap()
-                .load(data.img)
-                .fitCenter()
-                .into(object : CustomTarget<Bitmap>(200, 200) {
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        oneImage.onResourceReady(resource, transition)
-                        getNotificationManager(context).notify(data.id, notification)
-                    }
-                })
         }
+
+        Glide.with(context)
+            .asBitmap()
+            .load(data.img)
+            .fitCenter()
+            .into(object : CustomTarget<Bitmap>(200, 200) {
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap>?
+                ) {
+                    oneImage?.onResourceReady(resource, transition)
+                    data.id?.let { getNotificationManager(context).notify(it, notification) }
+                }
+            })
+
     }
 }

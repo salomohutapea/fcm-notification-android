@@ -2,4 +2,11 @@
     <string name="app_name">FCM Tutorial</string>
     <string name="default_notification_channel_id">notification_id</string>
     <string name="picture">Picture</string>
+    <string name="message">Message</string>
+    <string name="title">Title</string>
+    <string name="subtitle">Your name</string>
+    <string name="content_title">Content title</string>
+    <string name="content">Content</string>
+    <string name="send_message_to_all_user">SEND MESSAGE TO ALL USER</string>
+    <string name="image_url">Image URL, if not valid image will be empty</string>
 </resources>

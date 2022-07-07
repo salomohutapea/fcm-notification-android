@@ -13,13 +13,11 @@
 
         <ImageView
             android:id="@+id/one_img"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="48dp"
+            android:layout_height="60dp"
             android:contentDescription="@string/picture"
-            android:background="@drawable/ic_baseline_message_24"
-            android:maxWidth="96dp"
-            android:maxHeight="48dp"
-            android:backgroundTint="#0088FF" />
+            tools:background="@drawable/ic_launcher_foreground"
+            tools:backgroundTint="#0088FF" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,7 +59,7 @@
         android:id="@+id/one_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="4dp"
         android:textSize="11sp"
         tools:text="Content\nContent\nContent\nContent" />
 </LinearLayout>
