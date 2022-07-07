@@ -3,7 +3,9 @@ package com.salomohutapea.fcmtutorial
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -47,24 +49,35 @@ object NotificationUtil {
     fun buildNotification(data: NotificationData, context: Context) {
         lateinit var notification: Notification
 
+        val notificationIntent = Intent(context, MainActivity::class.java)
+
+        notificationIntent.flags =
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+
+        val intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
+
         if (data.type == NotificationType.COMPLEX) {
             val layout = RemoteViews(context.packageName, R.layout.notification_one)
+            val layoutHidden = RemoteViews(context.packageName, R.layout.notification_one_hidden)
 
             notification = NotificationCompat.Builder(context, CHANNEL_ID).apply {
                 setContentTitle(data.title)
                 setSmallIcon(R.drawable.ic_launcher_background)
                 setAutoCancel(false)
                 setStyle(NotificationCompat.DecoratedCustomViewStyle())
-                setCustomContentView(layout)
+                setCustomContentView(layoutHidden)
+                setCustomBigContentView(layout)
+                setContentIntent(intent)
             }.build()
 
-            generateOneContent(context, notification, data, layout)
+            generateOneContent(context, notification, data, layout, layoutHidden)
         } else {
             notification = NotificationCompat.Builder(context, CHANNEL_ID).apply {
                 setContentTitle(data.title)
                 setContentText(data.content)
                 setSmallIcon(R.drawable.ic_launcher_background)
                 setAutoCancel(true)
+                setContentIntent(intent)
             }.build()
 
             getNotificationManager(context).notify(data.id, notification)
@@ -75,12 +88,15 @@ object NotificationUtil {
         context: Context,
         notification: Notification,
         data: NotificationData,
-        layout: RemoteViews
+        layout: RemoteViews,
+        layoutHidden: RemoteViews
     ) {
         layout.setTextViewText(R.id.one_title, data.title)
         layout.setTextViewText(R.id.one_subtitle, data.subTitle)
         layout.setTextViewText(R.id.one_contenttitle, data.contentTitle)
         layout.setTextViewText(R.id.one_content, data.content)
+
+        layoutHidden.setTextViewText(R.id.one_title_hidden, data.title)
 
         val oneImage = NotificationTarget(
             context,
@@ -93,6 +109,7 @@ object NotificationUtil {
         Glide.with(context)
             .asBitmap()
             .load(data.img)
+            .fitCenter()
             .into(object : CustomTarget<Bitmap>(200, 200) {
                 override fun onLoadCleared(placeholder: Drawable?) {
                     TODO("Not yet implemented")

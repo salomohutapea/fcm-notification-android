@@ -13,7 +13,6 @@ class FCMService : FirebaseMessagingService() {
         val data = Gson().fromJson(text, NotificationData::class.java)
 
         NotificationUtil.createNotificationChannel(this)
-
         NotificationUtil.buildNotification(data, this)
         super.onMessageReceived(message)
     }
