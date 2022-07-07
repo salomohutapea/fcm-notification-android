@@ -1,0 +1,16 @@
+{
+  "data": {
+    "data": {
+      "id": 1234562,
+      "type": "COMPLEX",
+      "title": "Notification Title Example",
+      "subTitle": "Notification Subtitle Example",
+      "img": "https://smaller-pictures.appspot.com/images/dreamstime_xxl_65780868_small.jpg",
+      "contentTitle": "This is content title",
+      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sagittis interdum neque, eu sodales nunc vestibulum in. Cras lacinia facilisis est, eget interdum est tempus vitae. Fusce pulvinar imperdiet ipsum, eu pellentesque ligula sagittis sit amet."
+    }
+  },
+  "registration_ids": [
+    "cOV-3HHyQ52CPHHKl1bjsI:APA91bGeOzh1tTOuL13Cu-SdFo5PEZStbT-JJNcHriK1i952AAZP3UFtQiCvd6RFjKc8G5RGb4J38ARpbmaO_2PMMAckUybxEG5LRchPsVs8kRwukkzSWoLqzLztchtwWel-JBifS_W3"
+  ]
+}
