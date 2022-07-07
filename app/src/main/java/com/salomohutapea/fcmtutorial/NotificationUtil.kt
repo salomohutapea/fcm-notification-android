@@ -51,6 +51,7 @@ object NotificationUtil {
             val layout = RemoteViews(context.packageName, R.layout.notification_one)
 
             notification = NotificationCompat.Builder(context, CHANNEL_ID).apply {
+                setContentTitle(data.title)
                 setSmallIcon(R.drawable.ic_launcher_background)
                 setAutoCancel(false)
                 setStyle(NotificationCompat.DecoratedCustomViewStyle())
