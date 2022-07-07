@@ -55,7 +55,7 @@ object NotificationUtil {
                 setSmallIcon(R.drawable.ic_launcher_background)
                 setAutoCancel(false)
                 setStyle(NotificationCompat.DecoratedCustomViewStyle())
-                setCustomBigContentView(layout)
+                setCustomContentView(layout)
             }.build()
 
             generateOneContent(context, notification, data, layout)
