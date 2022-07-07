@@ -54,7 +54,8 @@ object NotificationUtil {
         notificationIntent.flags =
             Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 
-        val intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
+        val intent =
+            PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
 
         if (data.type == NotificationType.COMPLEX) {
             val layout = RemoteViews(context.packageName, R.layout.notification_one)
@@ -70,7 +71,23 @@ object NotificationUtil {
                 setContentIntent(intent)
             }.build()
 
-            generateOneContent(context, notification, data, layout, layoutHidden)
+            generateNotificationContent(context, notification, data, layout, layoutHidden)
+        } else if (data.type == NotificationType.MESSAGE) {
+            val layout = RemoteViews(context.packageName, R.layout.notification_one)
+            val layoutHidden =
+                RemoteViews(context.packageName, R.layout.notification_message_hidden)
+
+            notification = NotificationCompat.Builder(context, CHANNEL_ID).apply {
+                setContentTitle(data.title)
+                setSmallIcon(R.drawable.ic_launcher_background)
+                setAutoCancel(true)
+                setStyle(NotificationCompat.DecoratedCustomViewStyle())
+                setCustomContentView(layoutHidden)
+                setCustomBigContentView(layout)
+                setContentIntent(intent)
+            }.build()
+
+            generateNotificationContent(context, notification, data, layout, layoutHidden)
         } else {
             notification = NotificationCompat.Builder(context, CHANNEL_ID).apply {
                 setContentTitle(data.title)
@@ -84,7 +101,7 @@ object NotificationUtil {
         }
     }
 
-    private fun generateOneContent(
+    private fun generateNotificationContent(
         context: Context,
         notification: Notification,
         data: NotificationData,
@@ -98,27 +115,41 @@ object NotificationUtil {
 
         layoutHidden.setTextViewText(R.id.one_title_hidden, data.title)
 
-        val oneImage = NotificationTarget(
-            context,
-            R.id.one_img,
-            layout,
-            notification,
-            data.id
-        )
+        if (data.type === NotificationType.MESSAGE) {
+            layoutHidden.setTextViewText(
+                R.id.one_content_hidden,
+                data.title
+            )
+            return
+        }
 
-        Glide.with(context)
-            .asBitmap()
-            .load(data.img)
-            .fitCenter()
-            .into(object : CustomTarget<Bitmap>(200, 200) {
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    TODO("Not yet implemented")
-                }
+        if (data.type === NotificationType.COMPLEX) {
 
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    oneImage.onResourceReady(resource, transition)
-                    getNotificationManager(context).notify(data.id, notification)
-                }
-            })
+            val oneImage = NotificationTarget(
+                context,
+                R.id.one_img,
+                layout,
+                notification,
+                data.id
+            )
+
+            Glide.with(context)
+                .asBitmap()
+                .load(data.img)
+                .fitCenter()
+                .into(object : CustomTarget<Bitmap>(200, 200) {
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        oneImage.onResourceReady(resource, transition)
+                        getNotificationManager(context).notify(data.id, notification)
+                    }
+                })
+        }
     }
 }

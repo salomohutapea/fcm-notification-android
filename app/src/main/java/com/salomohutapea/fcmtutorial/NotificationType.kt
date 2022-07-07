@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 enum class NotificationType {
     COMPLEX,
-    SIMPLE,
+    MESSAGE,
 }
 
 data class NotificationData(
