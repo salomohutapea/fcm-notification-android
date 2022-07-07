@@ -13,21 +13,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        FirebaseMessaging.getInstance().token.addOnSuccessListener { token: String ->
-            if (!TextUtils.isEmpty(token)) {
-                Log.d("TOKEN", token)
-                val database =
-                    FirebaseDatabase.getInstance("https://fcm-tutorial-1a981-default-rtdb.asia-southeast1.firebasedatabase.app")
-                val myRef = database.getReference("message")
-
-                val key = myRef.child("posts").push().key
-
-                if (key != null) {
-                    myRef.child(key).child("name").setValue(token)
-                }
-            } else {
-                Log.w("TOKEN", "token should not be null...")
-            }
-        }
+//        FirebaseMessaging.getInstance().token.addOnSuccessListener { token: String ->
+//            if (!TextUtils.isEmpty(token)) {
+//                Log.d("TOKEN", token)
+//                val database =
+//                    FirebaseDatabase.getInstance("https://fcm-tutorial-1a981-default-rtdb.asia-southeast1.firebasedatabase.app")
+//                val myRef = database.getReference("message")
+//
+//                val key = myRef.child("posts").push().key
+//
+//                if (key != null) {
+//                    myRef.child(key).child("name").setValue(token)
+//                }
+//            } else {
+//                Log.w("TOKEN", "token should not be null...")
+//            }
+//        }
     }
 }
