@@ -63,7 +63,7 @@ object NotificationUtil {
             notification = NotificationCompat.Builder(context, CHANNEL_ID).apply {
                 setContentTitle(data.title)
                 setSmallIcon(R.drawable.ic_launcher_background)
-                setAutoCancel(false)
+                setAutoCancel(true)
                 setStyle(NotificationCompat.DecoratedCustomViewStyle())
                 setCustomContentView(layoutHidden)
                 setCustomBigContentView(layout)
